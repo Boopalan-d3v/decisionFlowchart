@@ -16,7 +16,7 @@ const questions = [
   {
     id: 3,
     type: "yesno",
-    text: "Is DRA deemed necessary? (DRA is separate assessment process / form)",
+    text: "Is Detailed Regulatory Assessment deemed necessary? (DRA is separate assessment process / form)",
     subheading: "Conduct an Initial Assessment",
     yes: 5,
     no: 4,
