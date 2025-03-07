@@ -1,0 +1,98 @@
+const questions = [
+  {
+    id: 1,
+    type: "yesno",
+    text: "Modification to an already cleared/licensed device",
+    subheading: "Intent to market a device",
+    yes: 3,
+    no: 2,
+  },
+  {
+    id: 2,
+    type: "info",
+    text: "Refer to Market Authorization and Establishment Registration Procedure",
+    next: null,
+  },
+  {
+    id: 3,
+    type: "yesno",
+    text: "Is DRA deemed necessary? (DRA is separate assessment process / form)",
+    subheading: "Conduct an Initial Assessment",
+    yes: 5,
+    no: 4,
+  },
+  {
+    id: 4,
+    type: "info",
+    text: "Document the rationale for not requiring DRA",
+    next: null,
+  },
+  {
+    id: 5,
+    type: "yesno",
+    text: "Deemed to impact safety or efficacy?",
+    subheading: "Complete DRA Form (Refer to DOC-00001)",
+    yes:6,
+    no:9,
+  },
+  {
+    id: 6,
+    type: "info",
+    text: "Identify regulatory action per the appropriate jurisdictions where Company markets products",
+    next:7,
+  },
+  {
+    id: 7,
+    type: "info",
+    text: "Obtain market authorization for the modified device through a new 510(k)",
+    next: 8,
+  },
+  {
+    id: 8,
+    type: "info",
+    text: "Commence Product Sale",
+  },
+  {
+    id: 9,
+    type: "yesno",
+    text: "1.2 Labelling change ?",
+    yes:10,
+    no:null,
+  },
+  {
+    id: 10,
+    type: "yesno",
+    text: "A1 Is it a change in the indications for use statement ?",
+    yes:12,
+    no:11,
+  },
+  {
+    id: 11,
+    type: "yesno",
+    text: "A2 Does the change add or delete a contraindication ?",
+    yes:null,
+    no:null,
+  },
+  {
+    id: 12,
+    type: "yesno",
+    text: "A1.1 Is it a change from a device labeled for single use only to a device labeled as reusable ?",
+    yes:13,
+    no:14,
+  },
+  {
+    id: 13,
+    type: "info",
+    text: "A new 510(k) is likely required.",
+    next:null,
+  },
+  {
+    id: 14,
+    type: "yesno",
+    text: "A1.2 Is it a change from fix to over the counter OTC use",
+    yes:13,
+    no:null,
+  },
+];
+
+export default questions;
