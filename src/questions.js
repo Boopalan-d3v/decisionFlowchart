@@ -2,7 +2,7 @@ const questions = [
   {
     id: 1,
     type: "yesno",
-    text: "Modification to an already cleared / licensed device ?",
+    text: "Modification to an already cleared / licensed device?",
     subheading: "Intent to market a device",
     yes: 3,
     no: 2,
