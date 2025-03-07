@@ -64,15 +64,15 @@ const questions = [
     type: "yesno",
     text: "A1 Is it a change in the indications for use statement ?",
     yes:12,
-    no:11,
+    no:14,
   },
-  {
+  /*{
     id: 11,
     type: "yesno",
     text: "A2 Does the change add or delete a contraindication ?",
     yes:null,
     no:null,
-  },
+  },*/
   {
     id: 12,
     type: "yesno",
@@ -90,7 +90,7 @@ const questions = [
     id: 14,
     type: "yesno",
     text: "A2 Does the change add or delete a contraindication ?",
-    yes:12,
+    yes:25,
     no:15,
   },
   {
@@ -98,7 +98,7 @@ const questions = [
     type: "yesno",
     text: "A3 Is it a change in the waring or precautions ?",
     yes:12,
-    no:null,
+    no:16,
   },
   {
     id: 16,
@@ -189,7 +189,7 @@ const questions = [
   {
     id: 29,
     type: "info",
-    text: "If Company does not manufacture IVD products not further steps require.",
+    text: "Follow IVDR specific Process",
     next: null,
   },
   {
@@ -245,16 +245,16 @@ const questions = [
     id: 37,
     type: "yesno",
     text: "B5.1 Does the change specifically affect the use of the device?",
-    yes:37,
-    no:23,
+    yes:13,
+    no:39,
   },
-  {
+  /*{
     id: 38,
     type: "yesno",
     text: "B5.1 Does the change specifically affect the use of the device?",
     yes:13,
     no:39,
-  },
+  },*/
   {
     id: 39,
     type: "yesno",
@@ -290,6 +290,7 @@ const questions = [
     yes:13,
     no:23,
   },
+  
 ];
 
 export default questions;
