@@ -7,7 +7,7 @@ export default function App() {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
-  const [hasLoggedEnd, setHasLoggedEnd] = useState(false); 
+  const [hasLoggedEnd, setHasLoggedEnd] = useState(false);
 
   const currentQuestion = questions.find((q) => q.id === currentId);
 
@@ -30,7 +30,7 @@ export default function App() {
       setIsEnd(false);
       setHasLoggedEnd(false);
     }
-  }, [currentQuestion, hasLoggedEnd]); 
+  }, [currentQuestion, hasLoggedEnd]);
 
   const handleAnswer = (answer) => {
     setHistory([
@@ -63,14 +63,13 @@ export default function App() {
 
     const newHistory = [...history];
 
-    // Remove "End" entry if it's the last one and we're at the end
     if (isEnd && newHistory[newHistory.length - 1].answer === "End") {
       newHistory.pop();
     }
 
     if (newHistory.length === 0) {
       setHistory(newHistory);
-      setCurrentId(1); // Restart if nothing left
+      setCurrentId(1);
       setIsEnd(false);
       return;
     }
@@ -85,7 +84,7 @@ export default function App() {
     setCurrentId(1);
     setHistory([]);
     setIsEnd(false);
-    setHasLoggedEnd(false); 
+    setHasLoggedEnd(false);
   };
 
   return (
@@ -107,7 +106,13 @@ export default function App() {
           <h2 className="subheading">{currentQuestion.subheading}</h2>
         )}
         {currentQuestion && (
-          <h1 className="question">{currentQuestion.text}</h1>
+          <div className="question">
+            {Array.isArray(currentQuestion.text) ? (
+              currentQuestion.text.map((line, index) => <p key={index}>{line}</p>)
+            ) : (
+              <p>{currentQuestion.text}</p>
+            )}
+          </div>
         )}
         {isEnd && <p className="end-message">End of the flowchart!</p>}
 
