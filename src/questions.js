@@ -357,7 +357,7 @@ const questions = [
   },
   {
     id: 49,
-    type: "info",
+    type: "yesno",
     pointer:"C6",
     text: "Is the proposed change a result of a new serious adverse event, new failure mode, higher than anticipated complaint rate, or a product deficiency that calls into question the safety or effectiveness of the current product on the market?",
     yes: 13,
@@ -482,7 +482,7 @@ const questions = [
     pointer:"2.6.1",
     text: "Does the change affect the Human Factors or User Interface",
     yes: 65,
-    no: 66,
+    no: 74,
   },
   {
     id: 65,
@@ -490,14 +490,14 @@ const questions = [
     pointer:"2.6.2",
     text: "Does the change User Interface?",
     yes: 67,
-    no: 66,
+    no: 74,
   },
-  {
+  /*{
     id: 66,
     type: "info",
     text: "Proceed to 2.7",
     next: null,
-  },
+  },*/
   {
     id: 67,
     type: "yesno",
@@ -526,7 +526,8 @@ const questions = [
   {
     id: 70,
     type: "info",
-    text: "Document to file and  Complete Threshold Analysis to document assessment of UI changes. ",
+    text: ["Document to file",
+      "Complete Threshold Analysis to document assessment of UI changes. ",],
     next:66,
   },
   {
