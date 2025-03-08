@@ -565,8 +565,8 @@ const questions = [
     pointer:"2.7.1",
     text: "Does a change in user or use environment affect the devices risk profile? ",
     subheading:"Document to file.",
-    yes:76,
-    no:71,
+    yes:13,
+    no:76,
   },
   {
     id: 76,
@@ -574,8 +574,8 @@ const questions = [
     pointer:"2.7.2",
     text: "Does a change in frequency or duration of use affect the device use profile?",
     subheading:"Document to file.",
-    yes:77,
-    no:71,
+    yes:13,
+    no:77,
   },
   {
     id: 77,
@@ -583,8 +583,8 @@ const questions = [
     pointer:"2.7.3",
     text: "Does a change concerning the compatibility or interoperability of the device with other devices, components, or accessories affect the overall risk profile of the device? ",
     subheading:"Document to file.",
-    yes:73,
-    no:71,
+    yes:13,
+    no:23,
   },
   {
     id: 78,
@@ -668,9 +668,9 @@ const questions = [
     next:null,
   },
   {
-    id: 82,
+    id: 88,
     type: "info",
-    text: " A 5-day notice is required.",
+    text: "A 5-day notice is required.",
     next:null,
   },
 
