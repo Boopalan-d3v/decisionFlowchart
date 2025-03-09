@@ -484,7 +484,7 @@ const questions = [
   },
   {
     id: 64,
-    type: "info",
+    type: "yesno",
     pointer:"2.6.1",
     text: "Does the change affect the Human Factors or User Interface?",
     yes: 65,
