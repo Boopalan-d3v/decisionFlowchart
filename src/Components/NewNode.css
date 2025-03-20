@@ -56,3 +56,9 @@
     max-width: 400px;
   }
   
+  .success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
