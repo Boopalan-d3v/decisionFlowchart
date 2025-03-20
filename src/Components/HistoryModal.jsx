@@ -1,13 +1,23 @@
+import { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
-import questions from "../Data/questions";
+import { fetchDataFromS3 } from "../awsConfig";
 
 export default function HistoryModal({ history, onClose }) {
+  const [fetchedQuestions, setFetchedQuestions] = useState([]);
+
+  useEffect(() => {
+    const loadQuestions = async () => {
+      const storedQuestions = await fetchDataFromS3();
+      setFetchedQuestions(storedQuestions);
+    };
+    loadQuestions();
+  }, []);
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     const content = history
       .map((item, index) => {
-        const questionData = questions.find((q) => q.id === item.id);
+        const questionData = fetchedQuestions.find((q) => q.id === item.id);
         const subheadingText = questionData?.subheading
           ? `Subheading: ${questionData.subheading}\n`
           : "";
@@ -35,7 +45,7 @@ export default function HistoryModal({ history, onClose }) {
         ) : (
           <ul className="history-body">
             {history.map((item, index) => {
-              const questionData = questions.find((q) => q.id === item.id);
+              const questionData = fetchedQuestions.find((q) => q.id === item.id);
               return (
                 <li key={index} className="history-item">
                   {questionData?.subheading && (

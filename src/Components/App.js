@@ -1,30 +1,40 @@
+
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import NewNode from "./NewNode";
-import questions from "../Data/questions";
 import HistoryModal from "./HistoryModal";
+import { fetchDataFromS3 } from "../awsConfig";
+import "./App.css";
 
 export default function App() {
+  const [questions, setQuestions] = useState([]);
   const [currentText, setCurrentText] = useState("Modification to an already cleared / licensed device?");
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const [hasLoggedEnd, setHasLoggedEnd] = useState(false);
 
+  // Load Questions from S3 Bucket on App Load
   useEffect(() => {
-    const storedQuestions = JSON.parse(localStorage.getItem("questions"));
-    if (storedQuestions) {
-      Object.assign(questions, storedQuestions);
-    }
-  }, []);
+    const loadQuestions = async () => {
+      const storedQuestions = await fetchDataFromS3();
+  
+      if (storedQuestions.length > 0) {
+        setQuestions(storedQuestions);
+      }
+    };
+  
+    loadQuestions();
+  }, []); // Add currentId as a dependency
+  
+  const currentQuestion = questions.find((q) => q.text === currentText) || {};
 
-  const currentQuestion = questions.find((q) => q.text === currentText);
+  console.log("Current Question:", currentQuestion);
 
   useEffect(() => {
     if (currentQuestion && currentQuestion.type !== "yesno" && !currentQuestion.next) {
       setIsEnd(true);
-
       if (!hasLoggedEnd) {
         setHistory((prevHistory) => [
           ...prevHistory,
@@ -38,6 +48,7 @@ export default function App() {
     }
   }, [currentQuestion, hasLoggedEnd]);
 
+  // Handle Answer Click
   const handleAnswer = (answer) => {
     setHistory([...history, { id: currentQuestion.id, question: currentQuestion.text, answer }]);
     const nextText = currentQuestion[answer];
@@ -48,6 +59,7 @@ export default function App() {
     }
   };
 
+  // Handle Next Button
   const handleNext = () => {
     if (currentQuestion.next) {
       setHistory([...history, { id: currentQuestion.id, question: currentQuestion.text, answer: "Next" }]);
@@ -57,11 +69,11 @@ export default function App() {
     }
   };
 
+  // Handle Back Button
   const handleBack = () => {
     if (history.length === 0) return;
 
     const newHistory = [...history];
-
     if (isEnd && newHistory[newHistory.length - 1]?.answer === "End") {
       newHistory.pop();
     }
@@ -79,12 +91,8 @@ export default function App() {
     setIsEnd(false);
   };
 
+  // Handle Restart Button
   const handleRestart = () => {
-    const storedQuestions = JSON.parse(localStorage.getItem("questions"));
-    if (storedQuestions) {
-      Object.assign(questions, storedQuestions);
-    }
-
     setCurrentText("Modification to an already cleared / licensed device?");
     setHistory([]);
     setIsEnd(false);
@@ -114,26 +122,33 @@ export default function App() {
                   {isEnd && <p>End of the flowchart!</p>}
 
                   <div className="button-group">
-                    {!isEnd && currentQuestion.type === "yesno" && (
-                      <>
-                        <button className="yes" onClick={() => handleAnswer("yes")}>Yes</button>
-                        <button className="no" onClick={() => handleAnswer("no")}>No</button>
-                      </>
-                    )}
-
-                    {!isEnd && currentQuestion.type === "info" && currentQuestion.next && (
-                      <button className="next" onClick={handleNext}>Next</button>
+                  {!isEnd && currentQuestion && currentQuestion.type === "yesno" && (
+                    <>
+                      <button className="yes" onClick={() => handleAnswer("yes")}>
+                        Yes
+                      </button>
+                      <button className="no" onClick={() => handleAnswer("no")}>
+                        No
+                      </button>
+                    </>
+                  )}  
+                  {!isEnd && currentQuestion.type === "info" && currentQuestion.next && (
+                      <button className="next" onClick={handleNext}>
+                        Next
+                      </button>
                     )}
 
                     {history.length > 0 && (
-                      <button className="back" onClick={handleBack}>Back</button>
+                      <button className="back" onClick={handleBack}>
+                        Back
+                      </button>
                     )}
                   </div>
                 </div>
               </div>
             }
           />
-          <Route path="/new-node" element={<NewNode />} />
+          <Route path="/new-node" element={<NewNode questions={questions} setQuestions={setQuestions} />} />
         </Routes>
 
         {showHistory && <HistoryModal history={history} onClose={() => setShowHistory(false)} />}
