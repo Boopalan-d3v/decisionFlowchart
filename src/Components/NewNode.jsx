@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchDataFromS3, uploadDataToS3 } from "../awsConfig";
+import { uploadDataToS3 } from "../awsConfig";
 import { v4 as uuidv4 } from "uuid";
 import "./NewNode.css";
 
 export default function NewNode({ questions, setQuestions }) {
-  const navigate = useNavigate();
   const [newQuestion, setNewQuestion] = useState({
     text: "",
     type: "yesno",
@@ -15,12 +13,6 @@ export default function NewNode({ questions, setQuestions }) {
   });
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [message, setMessage] = useState("");
-  const [otherYes, setOtherYes] = useState(false);
-  const [otherNo, setOtherNo] = useState(false);
-  const [otherNext, setOtherNext] = useState(false);
-  const [otherYesText, setOtherYesText] = useState("");
-  const [otherNoText, setOtherNoText] = useState("");
-  const [otherNextText, setOtherNextText] = useState("");
 
   useEffect(() => {
     if (selectedQuestion) {
@@ -37,7 +29,7 @@ export default function NewNode({ questions, setQuestions }) {
     } else {
       resetForm();
     }
-  }, [selectedQuestion]);
+  }, [selectedQuestion, questions]);
 
   const resetForm = () => {
     setNewQuestion({
@@ -47,12 +39,6 @@ export default function NewNode({ questions, setQuestions }) {
       no: "",
       next: "",
     });
-    setOtherYes(false);
-    setOtherNo(false);
-    setOtherNext(false);
-    setOtherYesText("");
-    setOtherNoText("");
-    setOtherNextText("");
   };
 
   const handleChange = (e) => {
@@ -62,10 +48,6 @@ export default function NewNode({ questions, setQuestions }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let updatedQuestions;
-
-    if (otherYes) newQuestion.yes = otherYesText;
-    if (otherNo) newQuestion.no = otherNoText;
-    if (otherNext) newQuestion.next = otherNextText;
 
     if (selectedQuestion) {
       updatedQuestions = questions.map((q) =>
@@ -90,6 +72,8 @@ export default function NewNode({ questions, setQuestions }) {
     await uploadDataToS3(updatedQuestions);
     setQuestions(updatedQuestions);
     setTimeout(() => setMessage(""), 3000);
+    resetForm();
+    setSelectedQuestion("");
   };
 
   const handleDelete = async () => {
@@ -106,6 +90,8 @@ export default function NewNode({ questions, setQuestions }) {
   return (
     <div className="new-node-container">
       <h2>{selectedQuestion ? "Edit Existing Node" : "Add New Node"}</h2>
+
+      {/* Select Existing Node Dropdown */}
       <label>Select Existing Node (Optional):</label>
       <select
         value={selectedQuestion}
@@ -120,6 +106,7 @@ export default function NewNode({ questions, setQuestions }) {
       </select>
 
       <form onSubmit={handleSubmit}>
+        {/* Question Text */}
         <label>Question Text:</label>
         <input
           type="text"
@@ -128,108 +115,83 @@ export default function NewNode({ questions, setQuestions }) {
           onChange={handleChange}
           required
         />
+
+        {/* Type Dropdown */}
         <label>Type:</label>
         <select name="type" value={newQuestion.type} onChange={handleChange}>
           <option value="yesno">Yes/No</option>
           <option value="info">Info</option>
         </select>
 
+        {/* Yes/No Type Handling */}
         {newQuestion.type === "yesno" && (
           <>
             <label>Yes (Next Question):</label>
             <select
-              value={otherYes ? "other" : newQuestion.yes}
-              onChange={(e) =>
-                e.target.value === "other"
-                  ? setOtherYes(true)
-                  : (setOtherYes(false), handleChange(e))
-              }
+              name="yes"
+              value={newQuestion.yes || ""}
+              onChange={handleChange}
             >
               <option value="">Select a question...</option>
               {questions.map((q) => (
-                <option key={q.id} value={q.text}>
+                <option key={q.id} value={q.id}>
                   {q.text}
                 </option>
               ))}
-              <option value="other">Other</option>
             </select>
-            {otherYes && (
-              <input
-                type="text"
-                placeholder="Enter new Yes option"
-                value={otherYesText}
-                onChange={(e) => setOtherYesText(e.target.value)}
-              />
-            )}
 
             <label>No (Next Question):</label>
             <select
-              value={otherNo ? "other" : newQuestion.no}
-              onChange={(e) =>
-                e.target.value === "other"
-                  ? setOtherNo(true)
-                  : (setOtherNo(false), handleChange(e))
-              }
+              name="no"
+              value={newQuestion.no || ""}
+              onChange={handleChange}
             >
               <option value="">Select a question...</option>
               {questions.map((q) => (
-                <option key={q.id} value={q.text}>
+                <option key={q.id} value={q.id}>
                   {q.text}
                 </option>
               ))}
-              <option value="other">Other</option>
             </select>
-            {otherNo && (
-              <input
-                type="text"
-                placeholder="Enter new No option"
-                value={otherNoText}
-                onChange={(e) => setOtherNoText(e.target.value)}
-              />
-            )}
           </>
         )}
 
+        {/* Info Type Handling */}
         {newQuestion.type === "info" && (
           <>
             <label>Next (Next Question):</label>
             <select
-              value={otherNext ? "other" : newQuestion.next}
-              onChange={(e) =>
-                e.target.value === "other"
-                  ? setOtherNext(true)
-                  : (setOtherNext(false), handleChange(e))
-              }
+              name="next"
+              value={newQuestion.next || ""}
+              onChange={handleChange}
             >
               <option value="">Select a question...</option>
               {questions.map((q) => (
-                <option key={q.id} value={q.text}>
+                <option key={q.id} value={q.id}>
                   {q.text}
                 </option>
               ))}
-              <option value="other">Other</option>
             </select>
-            {otherNext && (
-              <input
-                type="text"
-                placeholder="Enter new Next option"
-                value={otherNextText}
-                onChange={(e) => setOtherNextText(e.target.value)}
-              />
-            )}
           </>
         )}
 
+        {/* Submit & Delete Buttons */}
         <button type="submit">
           {selectedQuestion ? "Update Node" : "Add Node"}
         </button>
 
         {selectedQuestion && (
-          <button type="button" onClick={handleDelete} className="delete-button">
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="delete-button"
+          >
             Delete Node
           </button>
         )}
       </form>
+
+      {/* Success Message */}
       {message && <p className="success-message">{message}</p>}
     </div>
   );
